@@ -1,29 +1,22 @@
 import time
-import Bot1.requests.requests as telegramRequests
-import Bot1.database.database as telegramDatabase
+
+from dispatcher.dispatcher import Dispatcher
+
+import database.database as telegramDatabase
+from long_polling import start_long_polling
+from Handlers import DatabaseUpdate, MessageEcho,message_photo_echo, Command
 
 RECREATE_BOOL = False
 
 def main() -> None:
+    dispatcher = Dispatcher()
     
-    if RECREATE_BOOL:
-        telegramDatabase.recreate_db()
-    
-    try:
-        next_update_offset = 0
-        while True:
-            updates = telegramRequests.getUpdates(offset = next_update_offset)
-            telegramDatabase.persist_updates(updates)
-            for update in updates:
-                if "message" in update and "text" in update["message"]:
-                    telegramRequests.sendMessage(
-                        chat_id = update["message"]["chat"]["id"],
-                        text = update["message"]["text"]
-                    )
-                    next_update_offset = max(next_update_offset,update["update_id"]+1)
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print("\nBye!")
+    dispatcher.add_handlers(
+        DatabaseUpdate.DatabaseUpdate(),
+        Command.Command(),
+        MessageEcho.MessageEcho(),#Важный момент эхо вызывается перед фото. Если пользователь отправит фото с текстом, бот вернет только текст
+        message_photo_echo.message_photo_echo())
+    start_long_polling(dispatcher)
 
 if __name__ == "__main__":
     main()

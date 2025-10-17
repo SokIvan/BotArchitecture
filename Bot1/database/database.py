@@ -17,12 +17,13 @@ def recreate_db() -> None:
             """)
     connection.close()
     
-def persist_updates(updates:list) -> None:
+def persist_updates(update:list) -> None:
     connection = sqlite3.connect(os.getenv("SQLITE_PATH"))
     with connection:
-        data = []
-        for update in updates:
-            data.append((json.dumps(update),))
-        connection.executemany("INSERT INTO telegram_updates (payload) VALUES (?)",data)
+
+        connection.executemany(
+            "INSERT INTO telegram_updates (payload) VALUES (?)",
+            [(json.dumps(update, ensure_ascii=True, indent=2),)]
+                               )
         
     connection.close()

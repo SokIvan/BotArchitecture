@@ -29,3 +29,6 @@ def sendMessage(**param) -> dict:
 
 def getMe(**param) -> dict:
     return makePostRequest("getMe",**param)
+
+def sendPhoto(**param) -> dict:
+    return makePostRequest("sendPhoto",**param)
