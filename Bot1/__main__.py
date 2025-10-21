@@ -20,7 +20,7 @@ def main() -> None:
                         chat_id = update["message"]["chat"]["id"],
                         text = update["message"]["text"]
                     )
-            next_update_offset = max(next_update_offset,update["update_id"]+1) #Раньше при появлении фотографии не менял оффсет, хотя фото это тоже апдейт
+                next_update_offset = max(next_update_offset,update["update_id"]+1) #Апдейт должен быть внутри цикла for, так как может прийти сразу несколько update
             time.sleep(1)
     except KeyboardInterrupt:
         print("\nBye!")
