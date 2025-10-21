@@ -10,3 +10,5 @@ __pycache__
 #убрать 2ую домашку
 *.sh
 *.json
+
+get-pip.py

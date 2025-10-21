@@ -10,17 +10,17 @@ def main() -> None:
         telegramDatabase.recreate_db()
     
     try:
-        next_update_offset = 0
+        next_update_offset = 0#При старте неизвестно какой апдейт последний
         while True:
             updates = telegramRequests.getUpdates(offset = next_update_offset)
-            telegramDatabase.persist_updates(updates)
+            telegramDatabase.persist_updates(updates) #Поэтому после старта сразу появится несколько апдейтов
             for update in updates:
                 if "message" in update and "text" in update["message"]:
                     telegramRequests.sendMessage(
                         chat_id = update["message"]["chat"]["id"],
                         text = update["message"]["text"]
                     )
-                    next_update_offset = max(next_update_offset,update["update_id"]+1)
+            next_update_offset = max(next_update_offset,update["update_id"]+1) #Раньше при появлении фотографии не менял оффсет, хотя фото это тоже апдейт
             time.sleep(1)
     except KeyboardInterrupt:
         print("\nBye!")
