@@ -11,4 +11,5 @@ __pycache__
 *.sh
 *.json
 
-get-pip.py
+#оставляем полезный файл для автонастройки
+!install.sh
