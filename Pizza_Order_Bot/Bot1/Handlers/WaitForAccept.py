@@ -33,7 +33,7 @@ class WaitForAccept(Handler):
             cost = count_money(user)
             
             updateUserStatus(telegram_id,cost)
-            clearUserOrder(telegram_id)
+            #clearUserOrder(telegram_id) #заказ должен быть оставлен в базе данных для дальнейшего применения
             updateUserState(telegram_id,"NULL")
             sendMessage(
             chat_id=update["callback_query"]["message"]["chat"]["id"],
